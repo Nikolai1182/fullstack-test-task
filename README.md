@@ -11,10 +11,30 @@
 3. (Дополнительно) Разбейте логику фронтенда на слои;
 
 **Запуск:**
-1. ```docker compose -f docker-compose.dev.yml up```
-2. ```docker exec -it backend alembic upgrade head```
+1. В корне репозитория выполнить:
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+2. В отдельном терминале применить миграции:
+```bash
+docker exec -it backend alembic upgrade head
+```
 
 
 **Открыть фронт:** ```http://localhost:3000/test``` 
 
 **Открыть бэк:** ```http://localhost:8000/docs```
+
+### Примечания для локального запуска
+
+- Бэкенд в этом проекте на Python, поэтому в `backend` не используется `npm install`.
+- Для сборки фронтенда требуется файл `frontend/.env.production` (может быть пустым).
+
+### Troubleshooting Docker на macOS
+
+- Если видите `Cannot connect to the Docker daemon` — запустите Docker Desktop.
+- Если сборка падает с ошибкой snapshot/BuildKit:
+```bash
+DOCKER_BUILDKIT=0 docker compose -f docker-compose.dev.yml build --no-cache frontend
+DOCKER_BUILDKIT=0 docker compose -f docker-compose.dev.yml up
+```
